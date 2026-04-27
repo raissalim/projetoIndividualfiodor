@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+       <script src="cadastrologin.js"></script>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body class="paginalogin">
+
+    
+   <aside class="sidebar">
+
+        <div class="sidebar-logo">
+        <img class="logo" src="logo.png" alt="Logo do Sistema">
+    </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contexto.html">Contexto</a></li>
+                <li><a href="#">Resumo livro</a></li>
+                <li><a href="#">Cruzadinha</a></li>
+                <li><a href="#">Quiz</a></li>
+                <li><a href="Cadastro.html">Cadastro</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>       
+        </nav>
+    </aside>
+
+    
+    <main class="content">
+       
+        <div class="login">
+    
+
+  <form>
+     <h1>Entrar</h1>
+   
+
+    <label>Email:</label><br>
+    <input type="email" name="email" id="email" placeholder="Seu email" required><br><br>
+
+    <label>Senha:</label><br>   
+    <input type="password" name="senha" id="senha" placeholder="Minimo 8 caracteres "required><br><br>
+    
+    <button class="btnlogin" type="button" onclick="chamarfunc()">Criar conta</button>
+  </form>
+  
+
+        </div>
+
+        <script>
+
+        function chamarfunc(){
+                
+      let Logar= Login(email.value,senha.value);
+
+       if(Logar=="" || Logar ==undefined){
+            mensagem.innerHTML="Erro ao logar!" ;
+          }
+          else{
+            mensagem.innerHTML=" Login realizado com sucesso!";
+          }
+              }
+        </script>
+
+         </main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Noites brancas</title>
+      <script src="cadastrologin.js"></script>
+</head>
+<body class="cadastropagina">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+        <img class="logo" src="logo.png" alt="Logo do Sistema">
+    </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contexto.html">Contexto</a></li>
+                <li><a href="#">Resumo livro</a></li>
+                <li><a href="#">Cruzadinha</a></li>
+                <li><a href="#">Quiz</a></li>
+                <li><a href="Cadastro.html">Cadastro</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>       
+        </nav>
+    </aside>
+
+    
+    <main class="content">
+       
+        <div class="cadastro">
+    
+
+  <form>
+     <h1>Cadastra-se</h1>
+    <label>Nome:</label><br>
+    <input type="text" id="nome" name="nome" placeholder="Seu nome" required><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" id="email" name="email" placeholder="Seu email" required><br><br>
+
+    <label>Senha:</label><br>
+    <input type="password" id="senha"name="senha" placeholder="Minimo 8 caracteres "required><br><br>
+
+    <label>Confirmar Senha:</label><br>
+    <input type="password" id="confirmarsenha" name="confirmarsenha"placeholder="Confirmar senha" required><br><br>
+
+    <button class="btncadastrar" type="button" onclick="chamarfunc()">Criar conta</button>
+    <div id="mensagem"></div>
+  </form>
+  
+
+        </div>
+
+         </main>
+<script>
+    function chamarfunc(){
+      let cadastrar= cadastro(nome.value,email.value,senha.value,confirmarsenha.value);
+           if(!cadastrar){
+            mensagem.innerHTML="Erro ao  cadastrar!" ;
+          }
+          else{
+            mensagem.innerHTML="Cadastrado com sucesso!";
+          }
+
+         
+    }
+</script>
+        </body>
+</html>
