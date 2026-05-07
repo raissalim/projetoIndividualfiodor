@@ -6,57 +6,136 @@
 comandos para mysql server
 */
 
-CREATE DATABASE aquatech;
 
-USE aquatech;
 
-CREATE TABLE empresa (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	razao_social VARCHAR(50),
-	cnpj CHAR(14),
-	codigo_ativacao VARCHAR(50)
+CREATE DATABASE noitesbrancas;
+
+
+
+USE noitesbrancas;
+
+
+
+CREATE TABLE usuario(
+idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+nomeUsuario VARCHAR (100),
+email varchar(100) unique,
+senha varchar (45)
 );
 
-CREATE TABLE usuario (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(50),
-	email VARCHAR(50),
-	senha VARCHAR(50),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+CREATE TABLE pergunta(
+idPergunta INT PRIMARY KEY AUTO_INCREMENT,
+enunciado VARCHAR(255)
+
 );
 
-CREATE TABLE aviso (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	titulo VARCHAR(100),
-	descricao VARCHAR(150),
-	fk_usuario INT,
-	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
+CREATE TABLE alternativaPergunta(
+idAlternativaPergunta INT PRIMARY KEY AUTO_INCREMENT,
+fkPergunta int,
+alternativaCerta tinyint(1),
+descricao VARCHAR(255),
+FOREIGN KEY (fkPergunta)
+REFERENCES pergunta(idPergunta) -- vai ser usado para true e false aonde a validação vai ser se if(alternativaCerta!==1) false 
 );
 
-create table aquario (
-/* em nossa regra de negócio, um aquario tem apenas um sensor */
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+
+CREATE TABLE tentativas(
+idTentativa int primary key auto_increment,
+ fkUsuario INT,
+ pontuacao INT,
+ dataTentativa DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (fkUsuario)
+        REFERENCES usuario(idUsuario)
 );
 
-/* esta tabela deve estar de acordo com o que está em INSERT de sua API do arduino - dat-acqu-ino */
 
-create table medida (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	dht11_umidade DECIMAL,
-	dht11_temperatura DECIMAL,
-	luminosidade DECIMAL,
-	lm35_temperatura DECIMAL,
-	chave TINYINT,
-	momento DATETIME,
-	fk_aquario INT,
-	FOREIGN KEY (fk_aquario) REFERENCES aquario(id)
+CREATE TABLE respostaUsuario(
+    idResposta INT PRIMARY KEY AUTO_INCREMENT,
+    fkPergunta INT,
+    fkAlternativa INT,
+    fkUsuario INT,
+     fkTentativa INT,
+ FOREIGN KEY (fkTentativa)REFERENCES tentativas(idTentativa),
+
+    FOREIGN KEY (fkPergunta)
+        REFERENCES pergunta(idPergunta),
+
+    FOREIGN KEY (fkAlternativa)
+        REFERENCES alternativaPergunta(idAlternativaPergunta),
+
+    FOREIGN KEY (fkUsuario)
+        REFERENCES usuario(idUsuario)
+   
 );
 
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B');
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
-insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
-insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
+
+INSERT INTO pergunta (enunciado)	
+VALUES ('Quem é o personagem principal?'),
+('Qual é o tema principal do livro?'),
+('Em que cidade a história de Noites Brancas se passa?'),
+('Como o protagonista é descrito?'),
+('O que acontece no final da história?');
+
+
+SELECT*FROM pergunta;
+SELECT *FROM alternativaPergunta;
+
+
+INSERT INTO alternativaPergunta (fkPergunta, descricao, alternativaCerta)
+VALUES
+(1, 'Machado de assis ', 0),
+(1, 'Fiódor Dostoiévski', 1),
+(1, 'Jose de alencar', 0),
+(1, 'Liev Tolstói', 0),
+
+(2, '  A vida no campo', 0),
+(2, 'Uma história de amor e solidão', 1),
+(2, ' Aventuras de guerra', 0),
+(2, '  Investigação policial', 0),
+
+
+(3, 'Moscou ', 0),
+(3, 'São Petersburgo', 1),
+(3, ' Paris ', 0),
+(3, ' Londres ', 0),
+
+(4, 'Um jovem sonhador e solitário', 1),
+(4, ' Um soldado experiente', 0),
+(4, ' Um comerciante rico', 0),
+(4, 'Um médico famoso', 0),
+
+
+(5, 'O protagonista se casa com a amada', 0),
+(5, ' São Ele encontra sua felicidade imediata', 0),
+(5, 'A relação amorosa não se concretiza como ele esperava', 1),
+(5, 'Ele viaja para outro país', 0);
+
+
+
+
+
+
+SELECT * FROM respostaUsuario;
+
+
+
+
+SELECT*FROM pergunta;
+Select*from alternativaPergunta;
+
+SELECT* FROM respostausuario;
+
+SELECT *FROM usuario;
+
+
+
+SELECT 
+    u.nomeUsuario,
+    p.enunciado,
+    a.descricao,
+    a.alternativaCerta
+FROM respostaUsuario r
+JOIN usuario u ON r.fkUsuario = u.idUsuario
+JOIN pergunta p ON r.fkPergunta = p.idPergunta
+JOIN alternativaPergunta a ON r.fkAlternativa = a.idAlternativaPergunta;

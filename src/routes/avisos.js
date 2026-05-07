@@ -27,4 +27,16 @@ router.delete("/deletar/:idAviso", function (req, res) {
     avisoController.deletar(req, res);
 });
 
+
+var usuarioModel = require("./src/models/usuarioModel");
+
+// TESTE CADASTRO
+usuarioModel.cadastrar("Teste", "teste@gmail.com", "1234")
+    .then(res => {
+        console.log("CADASTRO OK:", res);
+    })
+    .catch(err => {
+        console.log("ERRO:", err);
+    });
+
 module.exports = router;

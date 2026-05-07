@@ -1,0 +1,423 @@
+
+body {
+    margin: 0;
+    display: flex;
+
+}
+
+.sidebar {
+    height: 100vh;      
+    width: 20%;    
+    font-family: Poppins;
+    font-weight: bold;
+    position: fixed;    
+    background-color: #0e1a40;
+    color: white;
+    padding-top: 20px;
+}
+
+.sidebar h2 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li a {
+    padding: 15px 25px;
+    display: block;
+    color: white;
+     font-size: 100%;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+
+.sidebar li a:hover {
+    background-color:#d59600;
+    padding-left: 35px;
+}
+
+
+.content {
+     margin-left: 20%;
+    width: 80%;
+}
+.logo{
+    width:50%;
+    height:40%;
+     display: block;
+    margin: 0 auto;
+}
+.imagemprincipal {
+    position: relative;
+}
+.imagemprincipal img{
+      width: 100%;
+    height: auto;
+    display: block;
+}
+.header{
+    color:#f2b441;
+     font-weight: bold;
+    font-family: Poppins;
+    margin-bottom:10%;
+
+}
+.personagemsonhador{
+    color:white;
+    width:80%;
+    padding: 10%;
+    height:auto;
+    background-color: #07338c;
+    font-weight: bold;
+    font-family: Poppins;
+    font-size: 100%;
+    
+    
+}
+.contextopagina{
+    background-color: #0B204A;
+
+}
+.header_contexto{
+     color:#f2b441;
+    margin: 5% 5% 5% 8%;
+     
+}
+.cards{
+      display:flex;
+      justify-content: center;
+      gap:10%;
+    
+}
+.card h3{
+     color:#f2b441;
+   
+}
+.card{
+    width: 20%;
+    color:white;
+    height: 20%;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    background-color: #0e1a40;
+    border-radius: 10%;  
+    padding: 2%;
+    text-align: center;
+    font-family:Poppins ;
+    box-shadow: 4% 4% 10% rgba(244, 241, 241, 0.2);
+    font-weight: bold;
+    margin-top: 10%;
+
+}
+.botaocards{
+    background-color:#07338c;
+    color:white;
+    border-radius:15%;
+    width: 60%;
+    height: auto;
+    margin: 10% 20% 30% 15%;
+    box-shadow: 0% 2% 10% rgba(244, 241, 241, 0.2);
+    padding: 5%;
+    text-decoration: none;
+    font-size: 80%;
+}
+.cards_contexto{
+       display: flex;
+       flex-direction: column;
+      justify-content: center;
+     
+    
+}
+
+.card_contexto{
+    width: 80%;
+    color:white;
+    justify-content: space-between;
+    background-color: #0e1a40;
+    border-radius: 3%;  
+    padding: 2%;
+    text-align: center;
+    font-family:Arial, Helvetica, sans-serif;
+    box-shadow: 0% 4% 10% rgba(244, 241, 241, 0.2);
+    font-weight: bold;
+    margin: 2% 10% 5% 8%;
+    
+  
+
+}
+.card_contexto h2{
+    text-align: left;
+    font-weight: bold;
+     font-family:Arial, Helvetica, sans-serif;
+    color:#f2b441;
+}
+
+.card_contexto p{
+    max-width: 90%;       
+    line-height: 1.6;        
+    text-align: justify;    
+    font-size: 16px;
+    color: white;
+}
+.cadastro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+
+}
+.cadastro form{
+  width: 35%;
+  height: auto;
+  padding: 20px;
+ flex-direction: column;
+  background-color:#0B204A;
+  color: white;
+  border-radius: 5em;
+  display: flex;
+}
+.cadastro input{
+    border-radius:12em ;
+   width: 95%;
+   padding: 2%;
+   background-color: #060f2d; 
+   border: 1px solid rgba(255, 255, 255, 0.3); 
+   color:white;
+ 
+}
+
+.cadastro h1{
+    color:#f2b441;
+    text-align: center;
+  margin-bottom: 20px;
+}
+.btncadastrar{
+    color:white;
+     font-family:Arial, Helvetica, sans-serif;
+    background-color: #f2b441;
+    border-radius:12em ;
+    width: 70%;
+    padding: 2%;
+    margin: 10% auto;
+    cursor:pointer;
+     box-shadow: 0 0 10px rgba(242, 180, 65, 0.6);
+}
+.cadastropagina{
+    
+  background-image: url("../assets/noitesbrancas.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.paginalogin{
+  background-image: url("../assets/noitesbrancas.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.btnlogin{
+    color:white;
+      font-family:Arial, Helvetica, sans-serif;
+    background-color: #f2b441;
+     border-radius:12em ;
+    width: 70%;
+    cursor: pointer;
+    padding: 2%;
+    margin: 10% auto;
+     box-shadow: 0 0 10px rgba(242, 180, 65, 0.6);
+}
+.login{
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login form{
+  width: 35%;
+  height: auto;
+  padding: 20px;
+ flex-direction: column;
+  background-color:#0B204A;
+  color: white;
+  border-radius: 5em;
+  display: flex;
+}
+.login input{
+   border-radius:12em ;
+   width: 95%;
+   padding: 2%;
+   background-color: #060f2d; 
+   border: 1px solid rgba(255, 255, 255, 0.3); 
+   color:white;
+ 
+}
+
+.login h1{
+    color:#f2b441;
+    text-align: center;
+  margin-bottom: 20px;
+}
+.triangulo{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.triangulo{
+    width: 50%;
+    height: 100%;
+    background-image: url("../assets/saopetersburgojpg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    transition: 0.5s;
+
+
+}
+
+.triangulo{
+    overflow: hidden;
+}
+
+.triangulo:hover{
+    background-size: 200%;
+    transition: 0.5s ease;
+}
+.paginaresumo{
+      background-color: #0B204A;
+}
+.textoheader{
+    color:#f2b441;
+    font-family:Arial, Helvetica, sans-serif;
+    margin-bottom: 20px;
+    font-size: medium;
+    font-weight: bold;
+   
+     margin: 10% 0 0 2%;
+}
+.textoresumo{
+    max-width: 60%;       
+    line-height: 1.6;        
+    text-align: justify;    
+    font-size: 16px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+     margin: 10% 0 0 1%;
+
+}
+
+
+.Quizpagina{
+
+    background-image: url("../assets/noitesjpeg.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color:white;
+    display: flex;
+     align-items: flex-start;
+   
+}
+#pontuacaoEJogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+.conteudomain{
+    flex:2; 
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:20%;
+}
+.btnIniciarQuiz{
+    width:400px;
+    background-color: #f2b441;
+    color:white;
+    border-radius: 1em;
+    padding: 2%;
+    font-family: Arial, Helvetica, sans-serif;
+   
+}
+.flex-colunar {
+    background: #112a57;
+    border-radius: 12px;
+    width: 400px;
+    text-align: center;
+    color: white;
+    gap: 2px;
+     display: flex;
+     height: auto;
+    flex-direction: column;
+    
+
+}
+.width-fit-content {
+    width: fit-content;
+}
+.padding-8 {
+    padding: 8px;
+}
+
+.text-success-with-bg {
+   color:rgb(0, 232, 31)
+}
+.btnavançar{
+    background-color: #2828b7;
+    color:white;
+    border-radius: 12em;
+    padding: 2%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.btntentenovamente{
+     background-color: #2bad45;
+    color:white;
+    border-radius: 12em;
+    padding: 2%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.aindanãotemcadastro{
+   text-align: center;
+    color:white;
+}
+
+.seta{
+    height: 40px;
+    margin-bottom: 20px;
+    bottom: 60px;
+    right:2%;
+    width: 40px;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;;
+    transform: rotate(45deg);
+    position: absolute;
+}
+.setaparabaixo{
+    height: 40px;
+    margin-bottom: 40px;
+    bottom: 60px;
+    right:2%;
+    width: 40px;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;;
+    transform: rotate(45deg);
+    position: absolute;
+
+}
+#b_usuario {
+    font-size: 30px;
+    margin:60px;
+    color:#2bad45;
+   
+    
+}

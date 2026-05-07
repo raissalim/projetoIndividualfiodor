@@ -14,7 +14,8 @@ _Implementação de referência de como fazer upload de arquivos e salvar **Loca
 4. Execute os comandos abaixo:
 
 ```
-npm i
+
+
 ``` 
 _O comando acima irá instalar as bibliotecas necessárias para o funcionamento do projeto. As bibliotecas a serem instaladas estão listadas no arquivo **package.json** então é muito importante que este não seja alterado. Será criada uma nova pasta/diretório chamado **node_modules** quando o comando for finalizado, que é onde as bibliotecas estão localizadas. Não altere a pasta/diretório._
 

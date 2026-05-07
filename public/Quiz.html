@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/sessao.js"></script>
+    <script src="./js/quiz.js"></script>
+
+    <title>Noites brancas</title>
+
+</head>
+
+<body class="Quizpagina" onload="onloadEsconder(), validarSessao()">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img class="logo" src="./assets/logo.png" alt="Logo do Sistema">
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contexto.html">Contexto</a></li>
+                <li><a href="resumo.html">Resumo livro</a></li>
+                <li><a href="cruzadinha.html">Cruzadinha</a></li>
+                <li><a href="Quiz.html">Quiz</a></li>
+                <li><a href="login.html">Login</a></li>
+
+
+                <span id="b_usuario"></span>
+            </ul>
+        </nav>
+    </aside>
+
+
+    <main class="conteudomain">
+
+
+        <div id="mensagem"></div>
+
+
+        <div id="pontuacaoEJogo">
+            <button id="btnIniciarQuiz" class="btnIniciarQuiz" onclick="iniciarQuiz()">INICIAR QUIZ</button>
+
+            <div id="pontuacao" class="flex-colunar width-fit-content border-primary">
+                <div id="pontuacaoDuranteJogo" class="flex-colunar padding-8">
+                    <span class="width-fit-content">Quantidade de acertos: <span id="spanCertas"></span></span>
+                    <span class="width-fit-content">Quantidade de erros: <span id="spanErradas"></span></span>
+                </div>
+                <div id="pontuacaoFinalJogo" class="flex-colunar padding-8">
+                    <span id="pontuacaoFinal" class="width-fit-content">Pontuação Final:
+                        <span id="spanPontuacaoFinal">***</span>
+                    </span>
+                    <span id="msgFinal" class="width-fit-content">***</span>
+                </div>
+            </div>
+
+            <div id="jogo" class="width-fit-content flex-colunar border-secondary">
+
+                <div id="infoQuestao" class="padding-8">
+                    <span>Questão atual: <span id="spanNumeroDaQuestaoAtual"></span> de <span id="qtdQuestoes"></span>
+                        questões.</span>
+                </div>
+
+                <div id="perguntaDaQuestaoAtual" class="padding-8">
+                    <span id="spanQuestaoExibida" class="text-bold"></span>
+                </div>
+
+                <div id="infoAlternativas" class="padding-8">
+                    <span><em>Escolha uma opção dentre as abaixo:</em></span>
+                </div>
+
+                <div id="opcoes" class="flex-colunar padding-8">
+
+                </div>
+
+                <div id="botoes" class="flex-colunar padding-8">
+                    <button class="btnIniciarQuiz" onclick="submeter()" id="btnSubmeter">Submeter resposta</button>
+                    <button onclick="avancar()" id="btnProx" class="btnavançar" disabled>Avançar para próxima
+                        questão</button>
+                    <!-- <button onclick="finalizar()" id="btnConcluir" disabled>Finalizar Quiz</button> -->
+                    <button onclick="tentarNovamente()" id="btnTentarNovamente" class="btntentenovamente"
+                        disabled>Tentar novamente</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+<script>
+
+
+    // variáveis globais
+    let listaDeQuestoes = [];
+    let quantidadeDeQuestoes = 0;
+    let numeroDaQuestaoAtual = 0;
+    let respondeu = false;
+    let pontuacaoFinal = 0;
+    let certas = 0;
+    let erradas = 0;
+    let tentativaAtual = null;
+
+    async function onloadEsconder() {
+        document.getElementById('pontuacao').style.display = "none";
+        document.getElementById('jogo').style.display = "none";
+
+        await carregarPergunta();
+    }
+
+    function iniciarQuiz() {
+
+        document.getElementById('pontuacao').style.display = "flex";
+        document.getElementById('jogo').style.display = "flex";
+        document.getElementById('btnIniciarQuiz').style.display = "none";
+
+        document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes;
+
+        preencherHTMLcomQuestaoAtual(0);
+
+        btnSubmeter.disabled = false;
+        btnProx.disabled = true;
+        btnTentarNovamente.disabled = true;
+    }
+
+    async function carregarPergunta() {
+        fetch("http://localhost:3333/quiz/perguntas")
+            .then(res => res.json())
+            .then(dados => {
+                listaDeQuestoes = dados;
+                quantidadeDeQuestoes = dados.length;
+            });
+    }
+
+    function preencherHTMLcomQuestaoAtual(index) {
+        const questaoAtual = listaDeQuestoes[index];
+        numeroDaQuestaoAtual = index;
+
+        document.getElementById("spanNumeroDaQuestaoAtual").innerHTML = index + 1;
+        document.getElementById("spanQuestaoExibida").innerHTML = questaoAtual.enunciado;
+
+
+        carregarAlternativas(questaoAtual.idPergunta);
+    }
+
+    function carregarAlternativas(idPergunta) {
+        fetch(`http://localhost:3333/quiz/alternativas/${idPergunta}`)
+            .then(res => res.json())
+            .then(dados => {
+
+                const container = document.getElementById("opcoes");
+                container.innerHTML = "";
+
+                dados.forEach((a, i) => {
+
+                    let letra = String.fromCharCode(65 + i);
+
+                    container.innerHTML += `
+                            <span>
+    <input 
+        type="radio"
+        id="alt${i}"
+        name="option"
+        value="${a.idAlternativaPergunta}"
+        data-correta="${a.alternativaCerta}"
+    >
+
+    <label for="alt${i}">
+        ${letra}) ${a.descricao}
+    </label>
+</span>
+`;
+                });
+            });
+    }
+
+    function submeter() {
+
+        console.log("ID USUARIO:", sessionStorage.ID_USUARIO);
+
+        if (respondeu)
+            return;
+
+        const option = document.querySelector('input[name="option"]:checked');
+
+        if (!option) {
+            alert("Escolha uma alternativa!");
+            return;
+        }
+
+        respondeu = true;
+
+        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual];
+
+        const acertou = option.dataset.correta == "1";
+
+        if (acertou) {
+            certas++;
+            pontuacaoFinal++;
+            spanCertas.innerHTML = certas;
+        } else {
+            erradas++;
+            spanErradas.innerHTML = erradas;
+        }
+
+        fetch("http://localhost:3333/quiz/responder", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                fkUsuario: sessionStorage.ID_USUARIO,
+                fkPergunta: questaoAtual.idPergunta,
+                fkAlternativa: Number(option.value),
+                fkTentativa:tentativaatual
+            })
+        });
+
+        btnProx.disabled = false;
+        btnSubmeter.disabled = true;
+    }
+
+    function avancar() {
+        btnProx.disabled = true
+        btnSubmeter.disabled = false
+
+        respondeu = false;
+
+        desmarcarRadioButtons()
+
+        numeroDaQuestaoAtual++;
+
+        if (numeroDaQuestaoAtual < quantidadeDeQuestoes - 1) {
+
+            preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
+        } else if (numeroDaQuestaoAtual == quantidadeDeQuestoes - 1) {
+            alert("Atenção... a próxima é a ultima questão!")
+            preencherHTMLcomQuestaoAtual(numeroDaQuestaoAtual)
+        } else {
+            finalizarJogo()
+        }
+        limparCoresBackgroundOpcoes()
+    }
+
+    function tentarNovamente() {
+        // atualiza a página
+        window.location.reload()
+    }
+
+    function checarResposta() {
+        const questaoAtual = listaDeQuestoes[numeroDaQuestaoAtual] // questão atual 
+        const respostaQuestaoAtual = questaoAtual.alternativaCorreta // qual é a resposta correta da questão atual
+
+        const options = document.getElementsByName("option"); // recupera alternativas no html
+
+        let alternativaCorreta = null // variável para armazenar a alternativa correta
+
+
+
+        options.forEach((option) => {
+            if (option.value === respostaQuestaoAtual) {
+                console.log("alternativaCorreta está no componente: " + alternativaCorreta)
+                alternativaCorreta = option.labels[0].id
+            }
+        })
+
+        // verifica se resposta assinalada é correta
+        options.forEach((option) => {
+            if (option.checked === true && option.value === respostaQuestaoAtual) {
+                document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
+                pontuacaoFinal++
+                certas++
+                document.getElementById("spanCertas").innerHTML = certas
+                numeroDaQuestaoAtual++
+            } else if (option.checked && option.value !== respostaQuestaoAtual) {
+                const wrongLabelId = option.labels[0].id
+
+                document.getElementById(wrongLabelId).classList.add("text-danger-with-bg")
+                document.getElementById(alternativaCorreta).classList.add("text-success-with-bg")
+                tentativaIncorreta++
+                erradas++
+                document.getElementById("spanErradas").innerHTML = erradas
+                numeroDaQuestaoAtual++
+            }
+        })
+    }
+
+    function limparCoresBackgroundOpcoes() {
+        const options = document.getElementsByName("option");
+        options.forEach((option) => {
+            document.getElementById(option.labels[0].id).classList.remove("text-danger-with-bg")
+            document.getElementById(option.labels[0].id).classList.remove("text-success-with-bg")
+        })
+    }
+
+    function desmarcarRadioButtons() {
+        const options = document.getElementsByName("option");
+        for (let i = 0; i < options.length; i++) {
+            options[i].checked = false;
+        }
+    }
+
+    function finalizarJogo() {
+
+        const porcentagem = pontuacaoFinal / quantidadeDeQuestoes;
+
+        let msg = "";
+        let classe = "";
+
+        if (porcentagem <= 0.3) {
+            msg = "Parece que você não estudou...";
+            classe = "text-danger-with-bg";
+        } else if (porcentagem < 0.9) {
+            msg = "Pode melhorar na próxima, hein!";
+            classe = "text-warning-with-bg";
+        } else {
+            msg = "Uau, parabéns!";
+            classe = "text-success-with-bg";
+        }
+
+        msg += `<br> Você acertou ${Math.round(porcentagem * 100)}% das questões.`;
+
+        msgFinal.innerHTML = msg;
+        msgFinal.classList.add(classe);
+
+        spanPontuacaoFinal.innerHTML = pontuacaoFinal;
+
+
+        fetch("http://localhost:3333/quiz/finalizar", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                fkUsuario: sessionStorage.ID_USUARIO,
+                pontuacao: pontuacaoFinal
+            })
+        })
+            .then(res => {
+                console.log("Pontuação salva!");
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+        btnProx.disabled = true;
+        btnSubmeter.disabled = true;
+        btnTentarNovamente.disabled = false;
+    }
+</script>
+
+</html>

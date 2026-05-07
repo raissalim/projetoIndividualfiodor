@@ -1,82 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AquaTech | Página Inicial</title>
-
-    <script src="./js/sessao.js"></script>
-
-    <link rel="stylesheet" href="./css/estilo.css">
-    <link rel="icon" href="./assets/icon/favicon2.ico">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Noites brancas</title>
 </head>
-
 <body>
-    <div class="header">
-      <div class="container">
-        <h1 class="titulo">AquaTech</h1>
-        <ul class="navbar">
-          <li class="agora">
-            <a href="#">Inicial</a>
-          </li>
-          <li>
-            <a href="simulador.html">Simulador</a>
-          </li>
-          <li>|</li>
-          <li>
-            <a href="login.html">Login</a>
-          </li>
-          <li>
-            <a href="cadastro.html">Cadastro</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  
-    <div class="banner">
-      <div class="container">
-        <p>Preservando <span>hoje</span> para existirem <span>amanhã</span>.</p>
-      </div>
-    </div>
-  
-    <div class="social">
-      <div class="container">
-        <div class="boxes">
-          <div class="box">
-            <img src="assets/imgs/planet-earth_color.png">
-            <h4>Missão</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
-          <div class="box">
-            <img src="assets/imgs/lightbulb_color.png">
-            <h4>Visão</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
-          <div class="box">
-            <img src="assets/imgs/growth_color.png">
-            <h4>Valores</h4>
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Et, quas cupiditate asperiores provident magnam
-              vitae illum iusto fugiat atque deleniti nulla sed iure suscipit, laborum, aliquid accusantium cum dicta
-              minima.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="footer">
-      <div class="container">
-        <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
-        <span class="version">v1.0.0</span>
-      </div>
-    </div>
-  </body>
 
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+        <img class="logo" src="./assets/logo.png" alt="Logo do Sistema">
+    </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="contexto.html">Contexto</a></li>
+                <li><a href="resumo.html">Resumo livro</a></li>
+                <li><a href="cruzadinha.html">Cruzadinha</a></li>
+                <li><a href="Quiz.html">Quiz</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>       
+        </nav>
+    </aside>
+
+    <main class="content">
+       <div class="imagemprincipal">
+        <img class="imagemprincipal" src="./assets/noitesbrancas.jpg" alt="Imagem principal">
+         <div class="seta" onclick="descer()"></div>
+         <div class="setaparabaixo" onclick="descer()"></div>
+         
+         
+       </div>
+
+      <div class="personagemsonhador">
+        
+        <div class="header">
+            <p><h1> Quem foi o personagem sonhador?</h1></p>
+        </div>
+
+        <p><h1>Em Noites Brancas, de Fiódor Dostoiévski, o Sonhador é um personagem solitário, sensível e muito imaginativo. Ele prefere viver em fantasias do que na realidade, idealiza o amor e tem dificuldade de se conectar com as pessoas. Apesar disso, demonstra sentimentos intensos, o que o torna vulnerável a decepções.
+   </h1>
+        </p>
+
+        <div class="cards">
+             <div class="card">
+                 <h3>Contexto</h3>
+               <p> A obra,o autor e a São Petersburgo do século XIX</p>
+                <a href="contexto.html" class="botaocards">Contexto</a>
+    </div>
+
+     <div class="card">
+                 <h3>Cruzadinha</h3>
+               <p>Resolva a cruzadinha e  teste  seu conhecimento</p>
+                  <a href="cruzadinha.html" class="botaocards">Cruzadinha</a>
+
+             </div>
+        
+
+         <div class="card">
+                 <h3>Quiz</h3>
+               <p>Faça o quiz, verifique seu conhecimento.</p>
+                 <a href="quiz.html" class="botaocards">Quiz</a>
+
+             </div>
+    </div>
+    
+    </main>
+   <script>
+     function descer(){
+       
+            top:document.querySelector(".personagemsonhador").scrollIntoView({
+            behavior:"smooth"
+
+        });
+     }
+   </script>
+</body>
 </html>
