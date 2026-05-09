@@ -3,9 +3,10 @@ var database = require("../database/config")
 function autenticar(email, senha) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
     var instrucaoSql = `
-            SELECT * FROM usuario
-                    WHERE email = ? AND senha = ?
-                `;
+        SELECT idUsuario, nomeUsuario, email, tipoUsuario
+        FROM usuario
+        WHERE email = ? AND senha = ?
+    `;
                 return database.executar(instrucaoSql, [email, senha]);
             }
 // Coloque os mesmos parâmetros aqui. Vá para a var instrucaoSql
@@ -24,7 +25,19 @@ function cadastrar(nome, email, senha) {
     return database.executar(instrucaoSql);
 }
 
+
+function buscarTotalUsuarios() {
+
+    var instrucaoSql = `
+        SELECT COUNT(*) AS totalUsuarios
+        FROM usuario;
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    buscarTotalUsuarios
 };

@@ -20,8 +20,6 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="contexto.html">Contexto</a></li>
                 <li><a href="resumo.html">Resumo livro</a></li>
-                <li><a href="cruzadinha.html">Cruzadinha</a></li>
-                <li><a href="Quiz.html">Quiz</a></li>
                 <li><a href="login.html">Login</a></li>
             </ul>       
         </nav>
@@ -41,15 +39,36 @@
     <label>Email:</label><br>
     <input type="email" id="email" name="email" placeholder="Seu email" required><br><br>
 
-    <label>Senha:</label><br>
-    <input type="password" id="senha"name="senha" placeholder="Minimo 8 caracteres "required><br><br>
 
+    <label>Senha:</label><br>
+    <input type="password" id="senha"name="senha" placeholder="Minimo 8 caracteres "required  onfocus="mostrar()" onblur="esconder()">
+<br><br>
+
+
+    
     <label>Confirmar Senha:</label><br>
     <input type="password" id="confirmarsenha" name="confirmarsenha"placeholder="Confirmar senha" required><br><br>
 
     <button class="btncadastrar" type="button" onclick="chamarfunc()">Criar conta</button>
     <div id="mensagem"></div>
   </form>
+
+
+<div id="card" style="display: none;">
+        A senha precisa ter:
+        <br>
+        • 8 caracteres
+        <br>
+        • letra maiúscula
+        <br>
+       
+        • letra minuscula
+        <br>
+          • um caractere especial
+        <br>
+        • número
+    </div>
+
   
 
         </div>
@@ -68,6 +87,14 @@
 
          
     }
+
+    function mostrar() {
+    card.style.display = "block";
+}
+
+function esconder() {
+    card.style.display = "none";
+}
 </script>
         </body>
 </html>

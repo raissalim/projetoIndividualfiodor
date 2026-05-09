@@ -1,6 +1,20 @@
 var quizModel = require("../models/quizModel");
 
 
+
+function iniciar(req,res){
+    var fkUsuario = req.body.fkUsuario;
+   quizModel.iniciarTentativa(fkUsuario)
+   .then((resultado)=>{
+    res.json({ idTentativa: resultado.insertId });
+   })
+   .catch((erro=>{
+    console.log(erro)
+    res.status(500).send(erro.sqlMessagem)
+   }));
+}
+
+
 function listarPerguntas(req, res) {
   quizModel.listarPerguntas()
   .then((resultado) => {
@@ -16,10 +30,11 @@ function responder(req, res) {
   var fkUsuario = req.body.fkUsuario;
   var fkPergunta =req.body.fkPergunta;
   var fkAlternativa= req.body.fkAlternativa
+    var fkTentativa = req.body.fkTentativa;
 
   console.log(req.body);
 
-  quizModel.responder(fkUsuario,fkPergunta,fkAlternativa).
+  quizModel.responder(fkUsuario,fkPergunta,fkAlternativa,fkTentativa).
   then((resultado) => {
     res.status(200).json(resultado);
   })
@@ -40,16 +55,22 @@ function listarAlternativas(req, res) {
 }
 
  function finalizar(req,res){
-    var fkUsuario = req.body.fkUsuario;
+   var fkTentativa = req.body.fkTentativa;
+
     var pontuacao = req.body.pontuacao;
 
+ console.log("FINALIZAR CHAMADO")
+    console.log("Tentativa:", fkTentativa)
+    console.log("Pontuação:", pontuacao)
 
-    if (!fkUsuario || pontuacao == null) {
+   
+
+    if (!fkTentativa || pontuacao == null) {
         return res.status(400).send("Dados inválidos");
     }
 
 
-   quizModel.finalizar(idTentativa)
+   quizModel.finalizar(fkTentativa,pontuacao)
       .then((resultado)=>{
         res.status(200).json(resultado);
       })
@@ -60,6 +81,7 @@ function listarAlternativas(req, res) {
 
  
 module.exports = {
+  iniciar,
   listarPerguntas,
   responder,
   listarAlternativas,

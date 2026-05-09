@@ -96,11 +96,17 @@ function Login(email, senha) {
         sessionStorage.EMAIL_USUARIO = json.email;
         sessionStorage.NOME_USUARIO = json.nome;
         sessionStorage.ID_USUARIO = json.id;
+        sessionStorage.TIPO_USUARIO = json.tipoUsuario;
 
         console.log(json);
-          
 
-        window.location.href = "dashboard.html";
+    if (json.tipoUsuario === "admin") {
+                window.location = "dashboard.html";
+            } else {
+                window.location = "quiz.html";
+            }
+
+          
     })
     .catch(err => {
         alert("Email ou senha inválidos");

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./css/style.css">
     <script src="./js/sessao.js"></script>
-    <script src="./js/quiz.js"></script>
+   
 
     <title>Noites brancas</title>
 
@@ -24,12 +24,10 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="contexto.html">Contexto</a></li>
                 <li><a href="resumo.html">Resumo livro</a></li>
-                <li><a href="cruzadinha.html">Cruzadinha</a></li>
-                <li><a href="Quiz.html">Quiz</a></li>
                 <li><a href="login.html">Login</a></li>
 
-
-                <span id="b_usuario"></span>
+               <li> <span id="b_usuario"></span></li>
+               
             </ul>
         </nav>
     </aside>
@@ -87,13 +85,12 @@
 
             </div>
         </div>
-    </main>
-</body>
-
+  </main>
 <script>
 
 
     // variáveis globais
+    
     let listaDeQuestoes = [];
     let quantidadeDeQuestoes = 0;
     let numeroDaQuestaoAtual = 0;
@@ -103,6 +100,15 @@
     let erradas = 0;
     let tentativaAtual = null;
 
+    // Referências aos elementos DOM
+    const btnSubmeter = document.getElementById('btnSubmeter');
+    const btnProx = document.getElementById('btnProx');
+    const btnTentarNovamente = document.getElementById('btnTentarNovamente');
+    const spanCertas = document.getElementById('spanCertas');
+    const spanErradas = document.getElementById('spanErradas');
+    const msgFinal = document.getElementById('msgFinal');
+    const spanPontuacaoFinal = document.getElementById('spanPontuacaoFinal');
+
     async function onloadEsconder() {
         document.getElementById('pontuacao').style.display = "none";
         document.getElementById('jogo').style.display = "none";
@@ -110,28 +116,51 @@
         await carregarPergunta();
     }
 
-    function iniciarQuiz() {
+    async function iniciarQuiz() {
+        try {
+            const resposta = await fetch("http://localhost:3333/quiz/iniciar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fkUsuario: sessionStorage.ID_USUARIO
+                })
+            });
+            if (!resposta.ok) {
+                throw new Error(`Erro HTTP: ${resposta.status}`);
+            }
+            const json = await resposta.json();
+            tentativaAtual = json.idTentativa;
 
-        document.getElementById('pontuacao').style.display = "flex";
-        document.getElementById('jogo').style.display = "flex";
-        document.getElementById('btnIniciarQuiz').style.display = "none";
+            document.getElementById('pontuacao').style.display = "flex";
+            document.getElementById('jogo').style.display = "flex";
+            document.getElementById('btnIniciarQuiz').style.display = "none";
 
-        document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes;
+            document.getElementById('qtdQuestoes').innerHTML = quantidadeDeQuestoes;
 
-        preencherHTMLcomQuestaoAtual(0);
+            preencherHTMLcomQuestaoAtual(0);
 
-        btnSubmeter.disabled = false;
-        btnProx.disabled = true;
-        btnTentarNovamente.disabled = true;
+            btnSubmeter.disabled = false;
+            btnProx.disabled = true;
+            btnTentarNovamente.disabled = true;
+        } catch (error) {
+            console.error('Erro ao iniciar quiz:', error);
+            document.getElementById('mensagem').innerHTML = 'Erro ao iniciar o quiz. Verifique se o servidor está rodando.';
+        }
     }
 
     async function carregarPergunta() {
-        fetch("http://localhost:3333/quiz/perguntas")
-            .then(res => res.json())
-            .then(dados => {
-                listaDeQuestoes = dados;
-                quantidadeDeQuestoes = dados.length;
-            });
+        try {
+            const res = await fetch("http://localhost:3333/quiz/perguntas");
+            if (!res.ok) {
+                throw new Error(`Erro HTTP: ${res.status}`);
+            }
+            const dados = await res.json();
+            listaDeQuestoes = dados;
+            quantidadeDeQuestoes = dados.length;
+        } catch (error) {
+            console.error('Erro ao carregar perguntas:', error);
+            document.getElementById('mensagem').innerHTML = 'Erro ao carregar perguntas. Verifique se o servidor está rodando.';
+        }
     }
 
     function preencherHTMLcomQuestaoAtual(index) {
@@ -145,35 +174,38 @@
         carregarAlternativas(questaoAtual.idPergunta);
     }
 
-    function carregarAlternativas(idPergunta) {
-        fetch(`http://localhost:3333/quiz/alternativas/${idPergunta}`)
-            .then(res => res.json())
-            .then(dados => {
+    async function carregarAlternativas(idPergunta) {
+        try {
+            const res = await fetch(`http://localhost:3333/quiz/alternativas/${idPergunta}`);
+            if (!res.ok) {
+                throw new Error(`Erro HTTP: ${res.status}`);
+            }
+            const dados = await res.json();
 
-                const container = document.getElementById("opcoes");
-                container.innerHTML = "";
+            const container = document.getElementById("opcoes");
+            container.innerHTML = "";
 
-                dados.forEach((a, i) => {
-
-                    let letra = String.fromCharCode(65 + i);
-
-                    container.innerHTML += `
-                            <span>
-    <input 
-        type="radio"
-        id="alt${i}"
-        name="option"
-        value="${a.idAlternativaPergunta}"
-        data-correta="${a.alternativaCerta}"
-    >
-
-    <label for="alt${i}">
-        ${letra}) ${a.descricao}
-    </label>
-</span>
-`;
-                });
+            dados.forEach((a, i) => {
+                let letra = String.fromCharCode(65 + i);
+                container.innerHTML += `
+                    <span>
+                        <input 
+                            type="radio"
+                            id="alt${i}"
+                            name="option"
+                            value="${a.idAlternativaPergunta}"
+                            data-correta="${a.alternativaCerta}"
+                        >
+                        <label for="alt${i}">
+                            ${letra}) ${a.descricao}
+                        </label>
+                    </span>
+                `;
             });
+        } catch (error) {
+            console.error('Erro ao carregar alternativas:', error);
+            document.getElementById('mensagem').innerHTML = 'Erro ao carregar alternativas.';
+        }
     }
 
     function submeter() {
@@ -214,8 +246,17 @@
                 fkUsuario: sessionStorage.ID_USUARIO,
                 fkPergunta: questaoAtual.idPergunta,
                 fkAlternativa: Number(option.value),
-                fkTentativa:tentativaatual
+                fkTentativa: tentativaAtual
             })
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error(`Erro HTTP: ${res.status}`);
+            }
+            return res.json();
+        }).then(data => {
+            console.log('Resposta enviada com sucesso');
+        }).catch(error => {
+            console.error('Erro ao enviar resposta:', error);
         });
 
         btnProx.disabled = false;
@@ -287,13 +328,21 @@
         })
     }
 
-    function limparCoresBackgroundOpcoes() {
-        const options = document.getElementsByName("option");
-        options.forEach((option) => {
-            document.getElementById(option.labels[0].id).classList.remove("text-danger-with-bg")
-            document.getElementById(option.labels[0].id).classList.remove("text-success-with-bg")
-        })
-    }
+   function limparCoresBackgroundOpcoes() {
+
+    const options = document.getElementsByName("option");
+
+    options.forEach((option) => {
+
+        const label = document.querySelector(`label[for="${option.id}"]`);
+
+        if(label){
+            label.classList.remove("text-danger-with-bg");
+            label.classList.remove("text-success-with-bg");
+        }
+
+    });
+}
 
     function desmarcarRadioButtons() {
         const options = document.getElementsByName("option");
@@ -327,24 +376,33 @@
 
         spanPontuacaoFinal.innerHTML = pontuacaoFinal;
 
+            console.log({
+        tentativaAtual,
+        pontuacaoFinal
+})
+
 
         fetch("http://localhost:3333/quiz/finalizar", {
             method: "POST",
-
             headers: {
                 "Content-Type": "application/json"
             },
-
             body: JSON.stringify({
-                fkUsuario: sessionStorage.ID_USUARIO,
-                pontuacao: pontuacaoFinal
+               fkTentativa: tentativaAtual,
+               pontuacao: pontuacaoFinal
             })
         })
             .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Erro HTTP: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
                 console.log("Pontuação salva!");
             })
             .catch(err => {
-                console.log(err);
+                console.error('Erro ao finalizar quiz:', err);
             });
 
         btnProx.disabled = true;
@@ -352,5 +410,7 @@
         btnTentarNovamente.disabled = false;
     }
 </script>
+
+</body>
 
 </html>

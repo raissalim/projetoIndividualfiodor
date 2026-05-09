@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/sessao.js"></script>
+    <title>Noites brancas</title>
+</head>
+
+<body class="Gerencimentopagina" onload="validarSessao(),KpiTotalUsuarios()">
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <img class="logo" src="./assets/logo.png" alt="Logo do Sistema">
+        </div>
+        <nav>
+            <ul>
+            <li>
+            <a href="dashboard.html">
+            Dashboard
+            </a>
+            </li>
+          </nav>
+
+        <button class="btn-logout" onclick="limparSessao()">
+            Sair
+        </button>
+
+    </aside>
+
+    <main class="conteudomain">
+
+   <div class="container-kpis">
+        <div class="card-kpi">
+            <p> Total de Usuários cadastrados no sistema desde maio/2026</p>
+            <span id="span_usuarios">0</span>
+        </div>
+
+
+        </div>
+    </main>
+
+
+
+    <script>
+        function KpiTotalUsuarios() {
+
+           fetch("/usuarios/buscarTotalUsuarios")
+                .then(resposta => resposta.json())
+                .then(dados => {
+
+                    span_usuarios.innerHTML = dados[0].totalUsuarios;
+
+                });
+
+        }
+    </script>
+</body>
+
+</html>

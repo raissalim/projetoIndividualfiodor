@@ -12,5 +12,7 @@ router.post("/responder", QuizController.responder);
 
 router.post("/finalizar", QuizController.finalizar );
 
+router.post("/iniciar",QuizController.iniciar)
+
 
 module.exports = router;

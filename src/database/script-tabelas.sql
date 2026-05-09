@@ -11,7 +11,7 @@ comandos para mysql server
 CREATE DATABASE noitesbrancas;
 
 
-
+drop database noitesbrancas;
 USE noitesbrancas;
 
 
@@ -20,7 +20,8 @@ CREATE TABLE usuario(
 idUsuario INT PRIMARY KEY AUTO_INCREMENT,
 nomeUsuario VARCHAR (100),
 email varchar(100) unique,
-senha varchar (45)
+senha varchar (45),
+tipoUsuario ENUM('admin', 'comum') DEFAULT 'comum'
 );
 
 CREATE TABLE pergunta(
@@ -113,6 +114,8 @@ VALUES
 
 
 
+INSERT INTO usuario (nomeUsuario, email, senha, tipoUsuario)
+VALUES ('Cherry', 'diva123@gmail.com', 'Che_1505', 'admin');
 
 
 
@@ -120,9 +123,12 @@ SELECT * FROM respostaUsuario;
 
 
 
+SELECT * FROM respostaUsuario;
 
 SELECT*FROM pergunta;
 Select*from alternativaPergunta;
+
+
 
 SELECT* FROM respostausuario;
 

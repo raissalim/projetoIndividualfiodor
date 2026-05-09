@@ -1,5 +1,14 @@
 var database = require("../database/config");
 
+
+
+function iniciarTentativa(fkUsuario){
+    var instrucaoSql= `INSERT INTO tentativas (fkUsuario, pontuacao)
+        VALUES (${fkUsuario},0)
+    `;
+    return database.executar(instrucaoSql);
+}
+
 function listarPerguntas() {
   var instrucaoSql = `SELECT * FROM pergunta`;
 
@@ -11,6 +20,7 @@ function responder(fkUsuario,fkPergunta,fkAlternativa,fkTentativa) {
   INSERT INTO respostaUsuario (fkUsuario, fkPergunta, fkAlternativa,fkTentativa)
   VALUES (${fkUsuario}, ${fkPergunta}, ${fkAlternativa}, ${fkTentativa})
   `;
+  console.log(instrucaoSql)
 
   return database.executar(instrucaoSql);
 }
@@ -29,23 +39,26 @@ function listarAlternativas(idPergunta) {
     return database.executar(instrucaoSql);
 }
 
- function finalizar(fkUsuario, pontuacao) {
+function finalizar(fkTentativa, pontuacao) {
 
     var instrucaoSql = `
-        INSERT INTO tentativas
-        (fkUsuario, pontuacao)
-        VALUES
-        (${fkUsuario}, ${pontuacao});
+        UPDATE tentativas
+        SET pontuacao = ${pontuacao}
+        WHERE idTentativa = ${fkTentativa};
     `;
+
+    console.log(instrucaoSql);
 
     return database.executar(instrucaoSql);
 }
 
+module.exports =
 
-module.exports = 
-{ listarPerguntas, 
-  responder,
-  listarAlternativas,
-  finalizar
+{ 
+    iniciarTentativa,
+    responder,
+    finalizar,
+    listarPerguntas,
+    listarAlternativas
 
   };
