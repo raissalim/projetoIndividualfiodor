@@ -79,8 +79,52 @@ function buscarTotalUsuarios(req, res) {
         });
 }
 
+function usuariosativos(req,res){
+     usuarioModel.usuariosativos()
+    .then(resultado =>{
+        res.json(resultado);
+
+    })
+    .catch(erro =>{
+        console.log(erro)
+        res.status(500).send(erro.sqlMessage)
+    });
+}
+
+function usuariosInativos(req,res){
+      usuarioModel.usuariosInativos()
+      .then(resultado =>{
+           res.json(resultado);
+      })
+      .catch(erro =>{
+        console.log(erro)
+          res.status(500).send(erro.sqlMessage)
+      });
+}
+
+ function obterDados(req,res){
+    usuarioModel.dadosGrafico()
+      
+    .then(function(resultado){
+
+        res.json(resultado);
+
+    })
+
+    .catch(function(erro){
+
+        console.log(erro);
+        res.status(500).json(erro);
+
+    });
+
+ }
+ 
 module.exports = {
     autenticar,
     cadastrar,
+    usuariosativos,
+    usuariosInativos,
+    obterDados,
     buscarTotalUsuarios
 };

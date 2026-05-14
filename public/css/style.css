@@ -101,7 +101,7 @@ body {
 .card{
     width: 20%;
     color:white;
-    height: 20%;
+    height: auto;
     flex-direction: column;
     display: flex;
     justify-content: space-between;
@@ -428,32 +428,143 @@ body {
     border: 1px solid rgb(19, 42, 140);
     border-radius: 10px;
     margin: 10px;
+   transition: 0.3s;
 }
 .dashboardpagina{
-    background-color: #F4F6DE;
+    background-color: #a8a8f7;
 }
 .btn-logout{
-    background-color: rgb(139, 2, 2);
+    background-color: #4D7C9C;
     color:white;
     font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
     border-radius: 20px;
     width: 100px;
     margin-top: 60px;
- 
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
-.container-kpis {
+ 
+
+.card_livros{
+      display:flex;
+      justify-content: center;
+      gap:5%;
+      
+    
+}
+.header_obras{
+    margin-top: 100px;
+    color:#f2b441;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+#btnsaibamais{
+    border-radius: 15px;
+    background-color:#f2b441;
+    color:white;
+    width: 200px;
+    align-self: center;
+    height: 40px;
+    
+    
+}
+.sobremim{
+    background-color: #4D7C9C;
+}
+.quemsoueu{
+            background-color: #00184b;
+            width: 80%;
+            margin: 30px auto;
+            color:white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.card_habildades{
     display: flex;
-    gap: 20px;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    
     flex-wrap: wrap;
 }
-.card-kpi {
-    width: 300px;
-    padding: 20px;
-    border-radius: 15px;
-    background-color: #1b263b;
-    color: white;
-    font-size: 20px;
+.card:hover{
+    transform: translateY(-50px);
+}
+.Linguagem h2{
+    color:white;
+    text-align: center;
+    margin-top:100px;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 40px;
+}
+.objetivos{
+     background-color: #00184b;
+     width: 80%;
+     margin: 30px auto;
+     color:white;
+     font-family: Arial, Helvetica, sans-serif;
+     font-size: 20px;
+     padding: 30px;
+     border-radius: 10px;
+     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+     display: flex;
+     align-items: center;
+    gap: 30px;
+
+}
+.quemsoueu img{
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.contato_seca{
+    text-align: center;
+      margin-bottom: 100px; 
+ 
+     
+}
+
+.contato{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+   
+}
+
+.icon{
+    width: 70px;
+      margin: 20px;
+    height: 70px;
+    background-color: #f2b441;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+   
+}
+
+.icon img{
+    width: 35px;
+    height: 35px;
+}
+
+.icon:hover{
+    transform: translateY(-8px);
+    background-color: #222;
+}
+.contato_secao h2{
+    color:white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 40px;
+}
+.quemsoueu p{
+    font-size: 25px;
 }

@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dash.css">
     <script src="./js/sessao.js"></script>
     <title>Noites brancas</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="Gerencimentopagina" onload="validarSessao(),KpiTotalUsuarios()">
+<body class="Gerencimentopagina" onload="validarSessao(),KpiTotalUsuarios(),usuariosAtivos(),usuariosinativos(),obterDadosGrafico(),GraficoAtividadeUsuario()">
     <aside class="sidebar">
 
         <div class="sidebar-logo">
@@ -34,17 +36,43 @@
 
    <div class="container-kpis">
         <div class="card-kpi">
-            <p> Total de Usuários cadastrados no sistema desde maio/2026</p>
-            <span id="span_usuarios">0</span>
+            <p> Total de Usuários cadastrados no sistema em maio de 2026</p>
+            <span id="span_usuarios"></span>
+        </div>
+
+          <div class="card-kpi">
+            <p> 
+                Total de Usuários ativos no sistema em maio de 2026
+            </p>
+            <span id="span_ativos"></span>
+        </div>
+            <div class="card-kpi">
+            <p> Total de Usuários inativos no sistema em maio de 2026</p>
+            <span id="span_inativos"></span>
         </div>
 
 
+
         </div>
+
+        <div class="grafico-container">
+
+         <div class="grafico-card">
+        <canvas id="graficoUsuarios"></canvas>
+    </div>
+
+    <div class="grafico-card">
+        <canvas id="graficoStatus"></canvas>
+    </div>
+        </div>
+        
     </main>
 
 
-
+    
     <script>
+        let grafico;
+        let proximaAtualizacao;
         function KpiTotalUsuarios() {
 
            fetch("/usuarios/buscarTotalUsuarios")
@@ -56,6 +84,327 @@
                 });
 
         }
+       function usuariosAtivos() {
+
+    fetch("/usuarios/usuariosAtivos")
+    .then(resposta => resposta.json())
+
+    .then(dados => {
+
+        console.log(dados);
+
+        document.getElementById("span_ativos").innerHTML =dados[0].usuariosAtivos;
+
+    });
+
+}
+         function usuariosinativos(){
+              fetch("/usuarios/usuariosInativos")
+                .then(resposta => resposta.json())
+                .then(dados => {
+
+                    console.log(dados);
+
+                document.getElementById("span_inativos").innerHTML =  dados[0].usuariosInativos;
+
+                });
+        }
+
+
+         function obterDadosGrafico(){
+
+
+            
+            
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+
+        fetch(`/usuarios/dadosGrafico`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                
+                    plotarGrafico(resposta);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+  
+       function plotarGrafico(resposta){
+
+    console.log('iniciando plotagem do gráfico...');
+
+    let labels = [];
+    let dados = [];
+
+    for(let i = 0; i < resposta.length; i++){
+
+        labels.push("Semana "+resposta[i].Semana);
+        dados.push(resposta[i].totalUsuarios);
+
+    }
+
+    const canvas = document.getElementById("graficoUsuarios");
+
+    grafico = new Chart(canvas, {
+
+        type: 'bar',
+
+        
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: 'Usuários cadastrados',
+
+            
+                data: dados,
+
+                  backgroundColor: '#1b263b',  
+                  borderColor: '#f2b441',   
+                  borderWidth: 5,
+                  tension: 0.3
+
+
+                            
+
+            }]
+
+        },
+options: {
+
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+
+        title: {
+
+            display: true,
+            text: 'Cadastro de usuários por mês',
+
+            color: '#ffffff',
+
+            font: {
+                size: 25,
+                family: 'Poppins',
+                weight: 'bold'
+            }
+
+        },
+
+        legend: {
+
+            labels: {
+
+                color: '#ffffff',
+
+                font: {
+                    size: 15
+                }
+
+            }
+
+        }
+
+    },
+
+    scales: {
+
+        x: {
+
+            ticks: {
+
+                color: '#ffffff',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        },
+
+        y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+                color: '#ffffff',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        }
+
+    }
+
+
+        }
+
+        
+
+    });
+    
+
+}
+    function GraficoAtividadeUsuario(){
+
+    fetch(`/usuarios/usuariosAtivos`)
+    .then(resposta => resposta.json())
+
+    .then(respostaAtivos => {
+
+        let ativos = respostaAtivos[0].usuariosAtivos;
+
+        fetch(`/usuarios/usuariosInativos`)
+        .then(resposta => resposta.json())
+
+        .then(respostaInativos => {
+
+            let inativos = respostaInativos[0].usuariosInativos;
+
+            const canvas = document.getElementById("graficoStatus");
+
+            new Chart(canvas, {
+
+                type: 'pie',
+
+                data: {
+
+                    labels: ['Ativos', 'Inativos'],
+
+                    datasets: [{
+
+                        data: [ativos, inativos],
+
+                        backgroundColor: [
+                            '#1b263b',
+                            '#f2b441'
+                        ],
+
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+
+                    }]
+
+                },
+
+              options: {
+
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+
+        title: {
+
+            display: true,
+            text: 'Cadastro de usuários por semana',
+
+            color: '#ffffff',
+
+            font: {
+                size: 25,
+                family: 'Poppins',
+                weight: 'bold'
+            }
+
+        },
+
+        legend: {
+
+            labels: {
+
+                color: '#ffffff',
+
+                font: {
+                    size: 15
+                }
+
+            }
+
+        }
+
+    },
+
+    scales: {
+
+        x: {
+
+            ticks: {
+
+                color: '#ffffff'
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        },
+
+        y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+                color: '#ffffff'
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        }
+
+    }
+
+}
+
+            });
+
+        });
+
+    });
+
+}
+
     </script>
 </body>
 

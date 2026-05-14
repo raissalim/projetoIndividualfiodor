@@ -71,27 +71,26 @@ function cadastro(nome, email, senha, confirmarsenha) {
 return false;
 }
 
-function Login(email, senha) {
+async function Login(email, senha) {
 
+    try {
 
-    fetch("http://localhost:3333/usuarios/autenticar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            emailServer: email,
-            senhaServer: senha
-        })
-    })
-    .then(function (resposta) {
-        if (resposta.ok) {
-            return resposta.json();
-        } else {
+        const resposta = await fetch("http://localhost:3333/usuarios/autenticar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                emailServer: email,
+                senhaServer: senha
+            })
+        });
+
+        if (!resposta.ok) {
             throw new Error("Login inválido");
         }
-    })
-    .then(json => {
+
+        const json = await resposta.json();
 
         sessionStorage.EMAIL_USUARIO = json.email;
         sessionStorage.NOME_USUARIO = json.nome;
@@ -100,18 +99,19 @@ function Login(email, senha) {
 
         console.log(json);
 
-    if (json.tipoUsuario === "admin") {
-                window.location = "dashboard.html";
-            } else {
-                window.location = "quiz.html";
-            }
+        if (json.tipoUsuario === "admin") {
+            window.location = "dashboard.html";
+        } else {
+            window.location = "quiz.html";
+        }
 
-          
-    })
-    .catch(err => {
+        return true;
+
+    } catch (err) {
+
         alert("Email ou senha inválidos");
         console.log(err);
-    });
 
-  
+        return false;
+    }
 }

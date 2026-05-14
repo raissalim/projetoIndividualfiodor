@@ -8,7 +8,7 @@
      
      <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="paginalogin">
+<body class="paginalogin" >
 
     
    <aside class="sidebar">
@@ -23,6 +23,7 @@
                 <li><a href="contexto.html">Contexto</a></li>
                 <li><a href="resumo.html">Resumo livro</a></li>     
                 <li><a href="login.html">Login</a></li>
+                 
             </ul>       
         </nav>
     </aside>
@@ -46,25 +47,25 @@
     <div id="mensagem" ></div>
     <button class="btnlogin" type="button" onclick="chamarfunc()">Entrar</button>
     <a class="aindanãotemcadastro" href="Cadastro.html">Ainda não tem cadastro?</a>
-     <a class="aindanãotemcadastro" href="Quiz.html">Ainda não fex o quiz?</a>
+
     </form>
   
 
         </div>
 
         <script>
+async function chamarfunc(){
 
-        function chamarfunc(){
-                
-      let Logar= Login(email.value,senha.value);
+    let Logar = await Login(email.value, senha.value);
 
-       if(Logar=="" || Logar ==undefined){
-            mensagem.innerHTML="Erro ao logar!" ;
-          }
-          else{
-            mensagem.innerHTML=" Login realizado com sucesso!";
-          }
-              }
+    console.log(Logar);
+
+    if(Logar){
+        mensagem.innerHTML = "Login realizado com sucesso!";
+    } else {
+        mensagem.innerHTML = "Erro ao logar";
+    }
+}
         </script>
 
          </main>

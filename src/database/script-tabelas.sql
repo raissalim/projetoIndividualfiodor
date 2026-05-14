@@ -1,12 +1,3 @@
--- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
--- Você precisa executar os comandos no banco de dados para criar as tabelas,
--- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
-
-/*
-comandos para mysql server
-*/
-
-
 
 CREATE DATABASE noitesbrancas;
 
@@ -23,6 +14,8 @@ email varchar(100) unique,
 senha varchar (45),
 tipoUsuario ENUM('admin', 'comum') DEFAULT 'comum'
 );
+
+ALTER TABLE usuario add column dataCadastro DATETIME DEFAULT CURRENT_TIMESTAMP;
 
 CREATE TABLE pergunta(
 idPergunta INT PRIMARY KEY AUTO_INCREMENT,
@@ -114,8 +107,6 @@ VALUES
 
 
 
-INSERT INTO usuario (nomeUsuario, email, senha, tipoUsuario)
-VALUES ('Cherry', 'diva123@gmail.com', 'Che_1505', 'admin');
 
 
 
@@ -128,13 +119,26 @@ SELECT * FROM respostaUsuario;
 SELECT*FROM pergunta;
 Select*from alternativaPergunta;
 
-
+TRUNCATE alternativaPergunta;
 
 SELECT* FROM respostausuario;
-
+SELECT*FROM tentativas;
 SELECT *FROM usuario;
 
 
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE respostaUsuario;
+TRUNCATE alternativaPergunta;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+INSERT INTO usuario (nomeUsuario, email, senha, tipoUsuario)
+VALUES ('Cherry', 'diva123@gmail.com', 'Che_1505', 'admin');
+
+
+TRUNCATE usuario;
 
 SELECT 
     u.nomeUsuario,

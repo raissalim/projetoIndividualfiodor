@@ -16,4 +16,15 @@ router.get("/buscarTotalUsuarios",function (req,res){
     usuarioController.buscarTotalUsuarios(req,res);
 });
 
+router.get("/usuariosativos", function (req,res){
+ usuarioController.usuariosativos(req,res);
+});
+
+router.get("/usuariosInativos", function (req,res){
+    usuarioController.usuariosInativos(req,res)
+});
+router.get("/dadosGrafico", function(req, res){
+    usuarioController.obterDados(req, res);
+});
+
 module.exports = router;

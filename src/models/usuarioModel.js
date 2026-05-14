@@ -25,6 +25,25 @@ function cadastrar(nome, email, senha) {
     return database.executar(instrucaoSql);
 }
 
+function usuariosativos(){
+    var instrucaoSql = 
+    `SELECT COUNT(DISTINCT fkUsuario) AS usuariosAtivos
+     FROM tentativas`;
+      return database.executar(instrucaoSql);
+}
+function usuariosInativos() {
+
+    var instrucaoSql = `
+        SELECT COUNT(*) AS usuariosInativos
+        FROM usuario
+        WHERE idUsuario NOT IN (
+            SELECT DISTINCT fkUsuario
+            FROM tentativas
+        );
+    `;
+
+    return database.executar(instrucaoSql);
+}
 
 function buscarTotalUsuarios() {
 
@@ -36,8 +55,28 @@ function buscarTotalUsuarios() {
     return database.executar(instrucaoSql);
 }
 
+function dadosGrafico(){
+
+    let instrucaoSql = `
+    SELECT 
+    WEEK(dataCadastro) as Semana,
+    COUNT(idUsuario) as totalUsuarios
+    FROM usuario
+    GROUP BY WEEK(dataCadastro)
+    ORDER BY Semana ;
+
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
+
+
 module.exports = {
     autenticar,
     cadastrar,
+    usuariosativos,
+    usuariosInativos,
+    dadosGrafico,
     buscarTotalUsuarios
 };
