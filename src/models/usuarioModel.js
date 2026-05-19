@@ -59,12 +59,10 @@ function dadosGrafico(){
 
     let instrucaoSql = `
     SELECT 
-    WEEK(dataCadastro) as Semana,
-    COUNT(idUsuario) as totalUsuarios
-    FROM usuario
-    GROUP BY WEEK(dataCadastro)
-    ORDER BY Semana ;
-
+     idUsuario,
+     dataCadastro
+     From usuario
+     ORDER BY dataCadastro;
     `;
 
     return database.executar(instrucaoSql);

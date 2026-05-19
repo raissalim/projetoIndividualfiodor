@@ -12,7 +12,15 @@ router.post("/responder", QuizController.responder);
 
 router.post("/finalizar", QuizController.finalizar );
 
-router.post("/iniciar",QuizController.iniciar)
+router.post("/iniciar",QuizController.iniciar);
+
+router.get("/pontuacaomaxima",QuizController.Maiorpontuacao);
+
+router.get("/pontucaomedia",QuizController.MediaPontuacao);
+
+router.get("/ranking",QuizController.Ranking);
+
+router.get("/perguntaerros",QuizController.PerguntasErradas);
 
 
 module.exports = router;

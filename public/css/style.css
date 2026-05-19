@@ -140,7 +140,7 @@ body {
     color:white;
     justify-content: space-between;
     background-color: #0e1a40;
-    border-radius: 3%;  
+    border-radius: 3px;  
     padding: 2%;
     text-align: center;
     font-family:Arial, Helvetica, sans-serif;
@@ -160,7 +160,7 @@ body {
 
 .card_contexto p{
     max-width: 90%;       
-    line-height: 1.6;        
+    line-height: 1.2;        
     text-align: justify;    
     font-size: 16px;
     color: white;
@@ -386,10 +386,16 @@ body {
     padding: 2%;
     font-family: Arial, Helvetica, sans-serif;
 }
-.aindanãotemcadastro{
+.aindanaotemcadastro{
    text-align: center;
     color:white;
 }
+
+.aindanaotemlogin{
+   text-align: center;
+    color:white;
+}
+
 
 .seta{
     height: 40px;
@@ -567,4 +573,7 @@ body {
 }
 .quemsoueu p{
     font-size: 25px;
+}
+.ativo{
+    background-color: #d59600;
 }

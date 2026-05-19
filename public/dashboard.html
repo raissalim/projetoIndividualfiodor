@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/dash.css">
     
     <script src="./js/sessao.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>Noites Brancas</title>
 </head>
 
-<body class="dashboardpagina" onload="validarSessao()">
+<body class="dashboardpagina" onload="validarSessao(),buscarMaiorPontuacao(),buscarMediaPontuacao(),obterDadosGraficoRanking(),perguntasMaisErradas()">
 
     <aside class="sidebar">
 
@@ -22,16 +23,9 @@
         <nav>
             <ul>
                 <li>
-                    <a href="dashboard.html">
-                         Dashboard
-                    </a>
-                </li>
+                    <a href="dashboard.html" class="ativo">Gereciamento do Quiz </a> </li>
 
-                <li>
-                    <a href="gereciamento.html">
-                         Gerencimento de usuarios
-                    </a>
-                </li>              
+                <li>  <a href="gereciamento.html">Gerencimento de usuarios</a></li>              
         </nav>
 
         <button class="btn-logout" onclick="limparSessao()">
@@ -40,16 +34,438 @@
 
     </aside>
 
-    <main class="conteudomain">
+    <main class="conteudoprincipal">
+
+      <div class="container-kpis">
+        <div class="card-kpi">
+            <p> Maior Pontuação obtida</p>
+            <span id="span_maiorpontuacao"></span>
+        </div>
+
+          <div class="card-kpi">
+            <p> 
+               Média de Pontuação
+            </p>
+            <span id="span_mediapontuacao"></span>
+        </div>
+          
+        </div>
+
+        <div class="grafico-container">
+
+    <div class="grafico-card">
+        <canvas id="graficoranking"></canvas>
+      
+    </div>
+
+    <div class="grafico-card">
+        <canvas id="graficoperguntasMaisErradas"></canvas>
+    </div>
 
 
-
+</div>
     </main>
 
 
 
     <script>
+        let proximaAtualizacao;
       
+  function buscarMaiorPontuacao(){
+
+    fetch("/quiz/pontuacaomaxima")
+
+    .then(resposta => resposta.json())
+
+    .then(dados => {
+
+        document.getElementById("span_maiorpontuacao")
+        .innerHTML = dados[0].maiorPontuacao;
+
+    });
+
+}
+
+
+function buscarMediaPontuacao(){
+
+    fetch("/quiz/pontucaomedia")
+
+    .then(resposta => resposta.json())
+
+    .then(dados => {
+
+        document.getElementById("span_mediapontuacao")
+        .innerHTML = Number(dados[0].mediapontuacao).toFixed(0)
+
+    });
+
+}
+
+
+
+      function obterDadosGraficoRanking(){
+
+
+            
+            
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+
+        fetch(`/quiz/ranking`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                
+                    plotarGrafico(resposta);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+  
+
+    
+  
+
+  
+       function plotarGrafico(resposta){
+
+    console.log('iniciando plotagem do gráfico...');
+
+    let nomes = [];
+    let pontos = [];
+
+    for(let i = 0; i < resposta.length; i++){
+
+        nomes.push(resposta[i].nomeUsuario);
+        pontos.push(resposta[i].pontuacao);
+
+    }
+    const canvas = document.getElementById("graficoranking");
+
+
+    grafico = new Chart(canvas, {
+
+        type: 'bar',
+
+        
+
+        data: {
+
+            labels: nomes,
+
+            datasets: [{
+
+                barThickness: 30,
+
+                label: 'Pontuação',
+
+            
+                data: pontos,
+
+                  backgroundColor: '#1b263b',  
+                  borderColor: '#00184b',   
+                  borderWidth: 3,
+                  tension: 0.3
+
+
+                            
+
+            }]
+
+        },
+options: {
+
+
+    indexAxis:'y',
+
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+
+        title: {
+
+            display: true,
+            text: 'Ranking Top 5 usuarios',
+
+            color: '#00184b',
+
+            font: {
+                size: 25,
+                family: 'Poppins',
+                weight: 'bold'
+            }
+
+        },
+
+        legend: {
+
+            labels: {
+
+                color: '#00184b',
+
+                font: {
+                    size: 15
+                }
+
+            }
+
+        }
+
+    },
+
+    scales: {
+
+        x: {
+
+
+        min: 0,
+        max: 5,
+
+
+            ticks: {
+        stepSize: 1,
+
+                color: '#00184b',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        },
+
+        y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+                color: '#00184b',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        }
+
+    }
+
+
+        }
+
+        
+
+    });
+    
+
+}
+
+    function perguntasMaisErradas(){
+
+
+            
+            
+        if (proximaAtualizacao != undefined) {
+            clearTimeout(proximaAtualizacao);
+        }
+
+        fetch(`/quiz/perguntaerros`, { cache: 'no-store' })
+        .then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                
+                    plotarGraficoPerguntas(resposta);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+
+    
+       function plotarGraficoPerguntas(resposta){
+
+    console.log('iniciando plotagem do gráfico...');
+
+    let perguntas = [];
+    let erros = [];
+
+    for(let i = 0; i < resposta.length; i++){
+
+        perguntas.push(resposta[i].enunciado);
+        erros.push(resposta[i].erros);
+
+    }
+    const canvas = document.getElementById("graficoperguntasMaisErradas");
+
+
+    grafico = new Chart(canvas, {
+
+        type: 'bar',
+
+        
+
+        data: {
+
+            labels: perguntas,
+
+            datasets: [{
+
+                barThickness: 30,
+
+                label: 'Quantidade de Erros',
+
+            
+                data: erros,
+
+                  backgroundColor: '#00184b',  
+                  borderColor: '#FFFFFF',   
+                  borderWidth: 2,
+                  tension: 0.3
+
+
+                            
+
+            }]
+
+        },
+options: {
+
+
+    indexAxis:'y',
+
+    responsive: true,
+    maintainAspectRatio: false,
+
+    plugins: {
+
+        title: {
+
+            display: true,
+            text: 'Perguntas mais erradas pelos os usuarios',
+
+            color: '#00184b',
+
+            font: {
+                size: 25,
+                family: 'Poppins',
+                weight: 'bold'
+            }
+
+        },
+
+        legend: {
+
+            labels: {
+
+                color: '#00184b',
+
+                font: {
+                    size: 15
+                }
+
+            }
+
+        }
+
+    },
+
+    scales: {
+
+        x: {
+
+
+        min: 0,
+        max: 5,
+
+
+            ticks: {
+        stepSize: 1,
+
+                color: '#00184b',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        },
+
+        y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+                color: '#00184b',
+
+                font: {
+                    size: 14,
+                    family: 'Poppins'
+                }
+
+            },
+
+            grid: {
+
+                color: 'rgba(255,255,255,0.1)'
+
+            }
+
+        }
+
+    }
+
+
+        }
+
+        
+
+    });
+    
+
+}
 
     </script>
 

@@ -79,11 +79,69 @@ function listarAlternativas(req, res) {
       });
  }
 
+   function Maiorpontuacao(req,res){
+      quizModel.maiorPontuacao()
+         .then(resultado => {
+            res.json(resultado);
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send(erro.sqlMessage);
+        });
+
+
+   }
+
+    function MediaPontuacao(req,res){
+      quizModel.mediaPontuacao()
+         .then(resultado => {
+            res.json(resultado);
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send(erro.sqlMessage);
+        });
+
+
+   }
+
+
+     function Ranking(req,res){
+      quizModel.ranking()
+         .then(resultado => {
+            res.json(resultado);
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send(erro.sqlMessage);
+        });
+
+
+   }
+
+   
+     function PerguntasErradas(req,res){
+      quizModel.perguntaserradas()
+         .then(resultado => {
+            res.json(resultado);
+        })
+        .catch(erro => {
+            console.log(erro);
+            res.status(500).send(erro.sqlMessage);
+        });
+
+
+   }
+
  
 module.exports = {
   iniciar,
   listarPerguntas,
   responder,
   listarAlternativas,
-  finalizar
+  Maiorpontuacao,
+  MediaPontuacao,
+  Ranking,
+  finalizar,
+  PerguntasErradas
 };

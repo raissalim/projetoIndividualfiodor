@@ -11,7 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="Gerencimentopagina" onload="validarSessao(),KpiTotalUsuarios(),usuariosAtivos(),usuariosinativos(),obterDadosGrafico(),GraficoAtividadeUsuario()">
+<body class="Gerencimentopagina"
+    onload="validarSessao(),KpiTotalUsuarios(),usuariosAtivos(),usuariosinativos(),obterDadosGrafico(),GraficoAtividadeUsuario()">
     <aside class="sidebar">
 
         <div class="sidebar-logo">
@@ -19,12 +20,11 @@
         </div>
         <nav>
             <ul>
-            <li>
-            <a href="dashboard.html">
-            Dashboard
-            </a>
-            </li>
-          </nav>
+                <li>
+                    <a href="dashboard.html">Gereciamento do Quiz </a>
+                    <a href="gereciamento.html" class="ativo"> Gerencimento de usuarios </a>
+                </li>
+        </nav>
 
         <button class="btn-logout" onclick="limparSessao()">
             Sair
@@ -34,22 +34,40 @@
 
     <main class="conteudomain">
 
-   <div class="container-kpis">
-        <div class="card-kpi">
-            <p> Total de Usuários cadastrados no sistema em maio de 2026</p>
-            <span id="span_usuarios"></span>
+
+
+        <div class="filtro">
+
+        <select id="select_mes">
+            <option value="todos">Todos</option>
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+        </select>
+
+          <button  class="btn_filtrar"onclick="filtrarMes()">Filtrar</button>
+
         </div>
 
-          <div class="card-kpi">
-            <p> 
-                Total de Usuários ativos no sistema em maio de 2026
-            </p>
-            <span id="span_ativos"></span>
-        </div>
+        <div class="container-kpis">
             <div class="card-kpi">
-            <p> Total de Usuários inativos no sistema em maio de 2026</p>
-            <span id="span_inativos"></span>
-        </div>
+                <p> Total de Usuários cadastrados no sistema em maio de 2026</p>
+                <span id="span_usuarios"></span>
+            </div>
+
+            <div class="card-kpi">
+                <p>
+                    Total de Usuários ativos no sistema em maio de 2026
+                </p>
+                <span id="span_ativos"></span>
+            </div>
+            <div class="card-kpi">
+                <p> Total de Usuários inativos no sistema em maio de 2026</p>
+                <span id="span_inativos"></span>
+            </div>
 
 
 
@@ -57,25 +75,87 @@
 
         <div class="grafico-container">
 
-         <div class="grafico-card">
-        <canvas id="graficoUsuarios"></canvas>
-    </div>
+            <div class="grafico-card">
+                <canvas id="graficoUsuarios"></canvas>
+            </div>
 
-    <div class="grafico-card">
-        <canvas id="graficoStatus"></canvas>
-    </div>
+            <div class="grafico-card">
+                <canvas id="graficoStatus"></canvas>
+            </div>
         </div>
-        
+
     </main>
 
 
-    
+
     <script>
+
+
+
         let grafico;
         let proximaAtualizacao;
+        let dadosOriginais = [];
+
+
+        function filtrarMes() {
+
+            const mesSelecionado = select_mes.value;
+
+            const dadosFiltrados = dadosOriginais.filter(item => {
+
+                const data = new Date(item.dataCadastro);
+
+                return data.getMonth() + 1 == mesSelecionado;
+            });
+
+            organizarSemanas(dadosFiltrados);
+        }
+
+
+
+
+        function organizarSemanas(dados) {
+
+            let semana1 = 0;
+            let semana2 = 0;
+            let semana3 = 0;
+            let semana4 = 0;
+            let semana5 = 0;
+
+            for (let i = 0; i < dados.length; i++) {
+
+                const data = new Date(dados[i].dataCadastro);
+
+                const dia = data.getDate();
+
+                if (dia <= 7) {
+                    semana1++;
+
+                } else if (dia <= 14) {
+                    semana2++;
+
+                } else if (dia <= 21) {
+                    semana3++;
+
+                } else if (dia <= 28) {
+                    semana4++;
+
+                } else {
+                    semana5++;
+                }
+            }
+
+            atualizarGrafico([
+                semana1,
+                semana2,
+                semana3,
+                semana4,
+                semana5
+            ]);
+        }
         function KpiTotalUsuarios() {
 
-           fetch("/usuarios/buscarTotalUsuarios")
+            fetch("/usuarios/buscarTotalUsuarios")
                 .then(resposta => resposta.json())
                 .then(dados => {
 
@@ -84,326 +164,240 @@
                 });
 
         }
-       function usuariosAtivos() {
+        function usuariosAtivos() {
 
-    fetch("/usuarios/usuariosAtivos")
-    .then(resposta => resposta.json())
+            fetch("/usuarios/usuariosAtivos")
+                .then(resposta => resposta.json())
 
-    .then(dados => {
+                .then(dados => {
 
-        console.log(dados);
+                    console.log(dados);
 
-        document.getElementById("span_ativos").innerHTML =dados[0].usuariosAtivos;
+                    document.getElementById("span_ativos").innerHTML = dados[0].usuariosAtivos;
 
-    });
+                });
 
-}
-         function usuariosinativos(){
-              fetch("/usuarios/usuariosInativos")
+        }
+        function usuariosinativos() {
+            fetch("/usuarios/usuariosInativos")
                 .then(resposta => resposta.json())
                 .then(dados => {
 
                     console.log(dados);
 
-                document.getElementById("span_inativos").innerHTML =  dados[0].usuariosInativos;
+                    document.getElementById("span_inativos").innerHTML = dados[0].usuariosInativos;
 
                 });
         }
 
 
-         function obterDadosGrafico(){
+        function obterDadosGrafico() {
 
 
-            
-            
-        if (proximaAtualizacao != undefined) {
-            clearTimeout(proximaAtualizacao);
-        }
 
-        fetch(`/usuarios/dadosGrafico`, { cache: 'no-store' })
-        .then(function (response) {
-            if (response.ok) {
-                response.json().then(function (resposta) {
-                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
-                
-                    plotarGrafico(resposta);
 
+            if (proximaAtualizacao != undefined) {
+                clearTimeout(proximaAtualizacao);
+            }
+
+            fetch(`/usuarios/dadosGrafico`, { cache: 'no-store' })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json().then(function (resposta) {
+                            console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                            plotarGrafico(resposta);
+
+                        });
+                    } else {
+                        console.error('Nenhum dado encontrado ou erro na API');
+                    }
+                })
+                .catch(function (error) {
+                    console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
                 });
-            } else {
-                console.error('Nenhum dado encontrado ou erro na API');
-            }
-        })
-            .catch(function (error) {
-                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
-            });
-    }
-  
-       function plotarGrafico(resposta){
+        }
+        function atualizarGrafico(valores) {
 
-    console.log('iniciando plotagem do gráfico...');
+            grafico.data.labels = [
+                "Semana 1",
+                "Semana 2",
+                "Semana 3",
+                "Semana 4",
+                "Semana 5"
+            ];
 
-    let labels = [];
-    let dados = [];
+            grafico.data.datasets[0].data = valores;
 
-    for(let i = 0; i < resposta.length; i++){
-
-        labels.push("Semana "+resposta[i].Semana);
-        dados.push(resposta[i].totalUsuarios);
-
-    }
-
-    const canvas = document.getElementById("graficoUsuarios");
-
-    grafico = new Chart(canvas, {
-
-        type: 'bar',
-
-        
-
-        data: {
-
-            labels: labels,
-
-            datasets: [{
-
-                label: 'Usuários cadastrados',
-
-            
-                data: dados,
-
-                  backgroundColor: '#1b263b',  
-                  borderColor: '#f2b441',   
-                  borderWidth: 5,
-                  tension: 0.3
-
-
-                            
-
-            }]
-
-        },
-options: {
-
-    responsive: true,
-    maintainAspectRatio: false,
-
-    plugins: {
-
-        title: {
-
-            display: true,
-            text: 'Cadastro de usuários por mês',
-
-            color: '#ffffff',
-
-            font: {
-                size: 25,
-                family: 'Poppins',
-                weight: 'bold'
-            }
-
-        },
-
-        legend: {
-
-            labels: {
-
-                color: '#ffffff',
-
-                font: {
-                    size: 15
-                }
-
-            }
-
+            grafico.update();
         }
 
-    },
+        function plotarGrafico(resposta) {
 
-    scales: {
+            console.log('iniciando plotagem do gráfico...');
 
-        x: {
+            dadosOriginais = resposta;
 
-            ticks: {
+            const canvas = document.getElementById("graficoUsuarios");
 
-                color: '#ffffff',
+            grafico = new Chart(canvas, {
 
-                font: {
-                    size: 14,
-                    family: 'Poppins'
-                }
-
-            },
-
-            grid: {
-
-                color: 'rgba(255,255,255,0.1)'
-
-            }
-
-        },
-
-        y: {
-
-            beginAtZero: true,
-
-            ticks: {
-
-                color: '#ffffff',
-
-                font: {
-                    size: 14,
-                    family: 'Poppins'
-                }
-
-            },
-
-            grid: {
-
-                color: 'rgba(255,255,255,0.1)'
-
-            }
-
-        }
-
-    }
-
-
-        }
-
-        
-
-    });
-    
-
-}
-    function GraficoAtividadeUsuario(){
-
-    fetch(`/usuarios/usuariosAtivos`)
-    .then(resposta => resposta.json())
-
-    .then(respostaAtivos => {
-
-        let ativos = respostaAtivos[0].usuariosAtivos;
-
-        fetch(`/usuarios/usuariosInativos`)
-        .then(resposta => resposta.json())
-
-        .then(respostaInativos => {
-
-            let inativos = respostaInativos[0].usuariosInativos;
-
-            const canvas = document.getElementById("graficoStatus");
-
-            new Chart(canvas, {
-
-                type: 'pie',
+                type: 'bar',
 
                 data: {
 
-                    labels: ['Ativos', 'Inativos'],
+                    labels: [
+                        "Semana 1",
+                        "Semana 2",
+                        "Semana 3",
+                        "Semana 4",
+                        "Semana 5"
+                    ],
 
                     datasets: [{
 
-                        data: [ativos, inativos],
+                        label: 'Usuários cadastrados',
 
-                        backgroundColor: [
-                            '#1b263b',
-                            '#f2b441'
-                        ],
+                        data: [0, 0, 0, 0, 0],
 
-                        borderColor: '#ffffff',
+                        backgroundColor: '#00184b',
+                        borderColor: '#FFFFFF',
                         borderWidth: 2
 
                     }]
-
-                },
-
-              options: {
-
-    responsive: true,
-    maintainAspectRatio: false,
-
-    plugins: {
-
-        title: {
-
-            display: true,
-            text: 'Cadastro de usuários por semana',
-
-            color: '#ffffff',
-
-            font: {
-                size: 25,
-                family: 'Poppins',
-                weight: 'bold'
-            }
-
-        },
-
-        legend: {
-
-            labels: {
-
-                color: '#ffffff',
-
-                font: {
-                    size: 15
                 }
-
-            }
-
-        }
-
-    },
-
-    scales: {
-
-        x: {
-
-            ticks: {
-
-                color: '#ffffff'
-
-            },
-
-            grid: {
-
-                color: 'rgba(255,255,255,0.1)'
-
-            }
-
-        },
-
-        y: {
-
-            beginAtZero: true,
-
-            ticks: {
-
-                color: '#ffffff'
-
-            },
-
-            grid: {
-
-                color: 'rgba(255,255,255,0.1)'
-
-            }
-
-        }
-
-    }
-
-}
-
             });
 
-        });
+            organizarSemanas(resposta);
+        }
 
-    });
+        function GraficoAtividadeUsuario() {
 
-}
+            fetch(`/usuarios/usuariosAtivos`)
+                .then(resposta => resposta.json())
+
+                .then(respostaAtivos => {
+
+                    let ativos = respostaAtivos[0].usuariosAtivos;
+
+                    fetch(`/usuarios/usuariosInativos`)
+                        .then(resposta => resposta.json())
+
+                        .then(respostaInativos => {
+
+                            let inativos = respostaInativos[0].usuariosInativos;
+
+                            const canvas = document.getElementById("graficoStatus");
+
+                            new Chart(canvas, {
+
+                                type: 'pie',
+
+                                data: {
+
+                                    labels: ['Ativos', 'Inativos'],
+
+                                    datasets: [{
+
+                                        data: [ativos, inativos],
+
+                                        backgroundColor: [
+                                            '#1b263b',
+                                            '#00184b'
+                                        ],
+
+                                        borderColor: '#ffffff',
+                                        borderWidth: 2
+
+                                    }]
+
+                                },
+
+                                options: {
+
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+
+                                    plugins: {
+
+                                        title: {
+
+                                            display: true,
+                                            text: 'Cadastro de usuários por semana',
+
+                                            color: '#00184b',
+
+                                            font: {
+                                                size: 25,
+                                                family: 'Poppins',
+                                                weight: 'bold'
+                                            }
+
+                                        },
+
+                                        legend: {
+
+                                            labels: {
+
+                                                color: '#00184b',
+
+                                                font: {
+                                                    size: 15
+                                                }
+
+                                            }
+
+                                        }
+
+                                    },
+
+                                    scales: {
+
+                                        x: {
+
+                                            ticks: {
+
+                                                color: '#00184b'
+
+                                            },
+
+                                            grid: {
+
+                                                color: 'rgba(255,255,255,0.1)'
+
+                                            }
+
+                                        },
+
+                                        y: {
+
+                                            beginAtZero: true,
+
+                                            ticks: {
+
+                                                color: '#00184b'
+
+                                            },
+
+                                            grid: {
+
+                                                color: 'rgba(255,255,255,0.1)'
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            });
+
+                        });
+
+                });
+
+        }
 
     </script>
 </body>

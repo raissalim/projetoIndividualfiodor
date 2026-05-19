@@ -51,7 +51,63 @@ function finalizar(fkTentativa, pontuacao) {
 
     return database.executar(instrucaoSql);
 }
+  function maiorPontuacao() {
 
+    var instrucaoSql = `
+        SELECT MAX(pontuacao) AS maiorPontuacao
+        FROM tentativas;
+    `;
+
+    console.log(instrucaoSql);
+
+    return database.executar(instrucaoSql);
+}
+
+   function mediaPontuacao(){
+    var instrucaoSql=`
+     SELECT AVG(pontuacao) AS mediapontuacao
+        FROM tentativas; `;
+
+    console.log(instrucaoSql)
+
+    return database.executar(instrucaoSql)
+   }
+
+   function ranking(){
+    var instrucaoSql=`
+
+       SELECT 
+            usuario.nomeUsuario,
+            MAX(tentativas.pontuacao) AS pontuacao
+        FROM tentativas
+        JOIN usuario
+            ON tentativas.fkUsuario = usuario.idUsuario
+        GROUP BY usuario.nomeUsuario
+        ORDER BY pontuacao DESC
+        LIMIT 5;
+    `;
+
+     console.log(instrucaoSql)
+
+    return database.executar(instrucaoSql)
+   }
+
+   function perguntaserradas(){
+     var instrucaoSql=`SELECT 
+    pergunta.enunciado,
+    COUNT(*) AS erros
+    FROM respostaUsuario
+    JOIN alternativaPergunta
+    ON respostaUsuario.fkAlternativa = alternativaPergunta.idAlternativaPergunta
+    JOIN pergunta
+        ON respostaUsuario.fkPergunta = pergunta.idPergunta
+    WHERE alternativaPergunta.alternativaCerta = 0
+    GROUP BY pergunta.enunciado
+    ORDER BY erros DESC;`;
+
+     console.log(instrucaoSql)
+     return database.executar(instrucaoSql);
+   }
 module.exports =
 
 { 
@@ -59,6 +115,10 @@ module.exports =
     responder,
     finalizar,
     listarPerguntas,
+    maiorPontuacao,
+    mediaPontuacao,
+    ranking,
+    perguntaserradas,
     listarAlternativas
 
   };

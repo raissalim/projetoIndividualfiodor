@@ -99,7 +99,7 @@
 #graficoUsuarios{
     width: 600px !important;
     height: 400px !important;
-    background-color: #aab4d3;
+    background-color: #FFFFFF;
 }
 .grafico-container{
     width: 100%;
@@ -112,7 +112,7 @@
 #graficoStatus{
      width: 600px !important;
     height: 400px !important;
-    background-color: #aab4d3;
+    background-color: #FFFFFF;
 }
 .grafico-card{
     background-color: #ffffff;
@@ -120,4 +120,51 @@
     border-radius: 20px;
 
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.dashboardpagina{
+    margin: 0;
+    background-color: #4D7C9C;
+}
+.dashboardpagina .conteudoprincipal{
+  margin-left: 20%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+#graficoranking{
+    width: 600px !important;
+    height: 400px !important;
+    background-color: #f9fbfe;
+}
+#graficoperguntasMaisErradas{
+    width: 600px !important;
+    height: 400px !important;
+    background-color: #FFFFFF;
+}
+.ativo{
+    background-color: #d59600;
+}
+.filtro{
+
+    display: flex;
+    gap:10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.btn_filtrar{
+    background-color: #d59600;
+    color:#ffffff;
+    border-radius:10px;
+    width: 200px;
+    height: 30px;
+}
+#select_mes{
+
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid #00184b;
+    font-size: 15px;
 }

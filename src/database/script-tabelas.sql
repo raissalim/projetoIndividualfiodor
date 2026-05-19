@@ -39,8 +39,7 @@ idTentativa int primary key auto_increment,
  pontuacao INT,
  dataTentativa DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (fkUsuario)
-        REFERENCES usuario(idUsuario)
+    FOREIGN KEY (fkUsuario)REFERENCES usuario(idUsuario)
 );
 
 
@@ -51,15 +50,11 @@ CREATE TABLE respostaUsuario(
     fkUsuario INT,
      fkTentativa INT,
  FOREIGN KEY (fkTentativa)REFERENCES tentativas(idTentativa),
+FOREIGN KEY (fkPergunta) REFERENCES pergunta(idPergunta),
 
-    FOREIGN KEY (fkPergunta)
-        REFERENCES pergunta(idPergunta),
+    FOREIGN KEY (fkAlternativa) REFERENCES alternativaPergunta(idAlternativaPergunta),
 
-    FOREIGN KEY (fkAlternativa)
-        REFERENCES alternativaPergunta(idAlternativaPergunta),
-
-    FOREIGN KEY (fkUsuario)
-        REFERENCES usuario(idUsuario)
+    FOREIGN KEY (fkUsuario) REFERENCES usuario(idUsuario)
    
 );
 
