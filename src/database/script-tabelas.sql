@@ -1,8 +1,6 @@
 
 CREATE DATABASE noitesbrancas;
 
-
-drop database noitesbrancas;
 USE noitesbrancas;
 
 
@@ -96,7 +94,7 @@ VALUES
 
 
 (5, 'O protagonista se casa com a amada', 0),
-(5, ' São Ele encontra sua felicidade imediata', 0),
+(5, '  Ele encontra sua felicidade imediata', 0),
 (5, 'A relação amorosa não se concretiza como ele esperava', 1),
 (5, 'Ele viaja para outro país', 0);
 
