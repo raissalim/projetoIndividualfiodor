@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/style.css">
+        <script src="./js/sessao.js"></script>
+      <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <title>Noites brancas</title>
+</head>
+<body class="contextopagina" onload="validarSessao()">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+        <img class="logo" src="./assets/logo.png" alt="Logo do Sistema">
+    </div>
+        
+        <nav>
+            <ul>
+                   <li><a href="index.html"><i class="fa-solid fa-house "></i> 
+                    Home  
+                </a></li>
+               
+                <li><a href="autor.html"> <i class="fa-solid fa-feather-pointed"></i>
+                    Autor
+                </a></li>
+
+                <li><a href="resumo.html"> <i class="fa-solid fa-book-open"></i>
+                    Resumo livro
+                </a></li>
+
+
+                <li><a href="Sobremim.html"> <i class="fa-solid fa-user"></i>
+                    Sobre Mim
+                </a></li>
+
+                
+                <li><a href="Quiz.html"> <i class="fa-solid fa-user"></i>
+                  Quiz
+                </a></li>
+
+                  
+                   <li><a href="ranking.html"> <i class="fa-solid fa-trophy"></i>
+                  Ranking
+                </a></li>
+            </ul>       
+              <button class="btn-logout" onclick="limparSessao()">
+            Sair
+        </button>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div class="container-tabela">
+            <table class="tabela-ranking">
+                <thead>
+                    <tr>
+                        <th>Posição</th>
+                        <th>Nome</th>
+                        <th>Pontuação</th>
+                    </tr>
+                </thead>
+                <tbody id="corpoTabela"></tbody>
+            </table>
+        </div>
+
+    </main>
+<script>
+fetch("http://localhost:3333/quiz/ranking")
+.then(res => res.json())
+.then(dados => {
+
+    let html = "";
+
+    dados.forEach((usuario, indice) => {
+        html += `
+            <tr>
+                <td>${indice + 1}º</td>
+                <td>${usuario.nomeUsuario}</td>
+                <td>${usuario.pontuacao}</td>
+            </tr>
+        `;
+    });
+
+
+    corpoTabela.innerHTML = html;
+});
+</script>
+
+
+</body>
+</html>

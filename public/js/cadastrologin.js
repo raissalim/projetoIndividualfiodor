@@ -1,4 +1,4 @@
-function cadastro(nome, email, senha, confirmarsenha) {
+ async function cadastro(nome, email, senha, confirmarsenha) {
 
     let regexSenha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     let regexNome = /^[A-Za-zÀ-ÿ\s]+$/;
@@ -35,43 +35,53 @@ function cadastro(nome, email, senha, confirmarsenha) {
         return false;
     }
 
-     fetch("http://localhost:3333/usuarios/cadastrar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+    
+    try {
+        const resposta = await fetch(
+            "http://localhost:3333/usuarios/cadastrar",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nomeServer: nome,
+                    emailServer: email,
+                    senhaServer: senha
+                })
+            }
+        );
 
-            body: JSON.stringify({
-            nomeServer: nome,
-            emailServer: email,
-            senhaServer: senha
-        })
-    })
-    .then(function (resposta) {
+        if (resposta.ok) {
 
-    if (resposta.ok) {
+            alert("Cadastro realizado com sucesso!");
 
-        alert("Cadastro realizado com sucesso!");
+            setTimeout(() => {
+                window.location = "login.html";
+            }, 3000);
 
-        setTimeout(() => {
-            window.location = "login.html";
-        }, 3000);
+            return true;
+        }
 
-    } else {
-        return resposta.text().then(texto => {
-            console.log(texto);
-            alert("Erro ao cadastrar");
-        });
+        alert("Erro ao cadastrar");
+        return false;
+
+    } catch (erro) {
+        console.log(erro);
+        alert("Erro de conexão com servidor");
+        return false;
     }
-})
-.catch(function (erro) {
-    console.log(erro);
-    alert("Erro de conexão com servidor");
-});
-return false;
 }
-
+   
+let tentativas=0;
 async function Login(email, senha) {
+
+      if (tentativas >= 3) {
+        alert("Número máximo de tentativas atingido.");
+        return false;
+    }
+
+
 
     try {
 
@@ -109,8 +119,18 @@ async function Login(email, senha) {
 
     } catch (err) {
 
-        alert("Email ou senha inválidos");
-        console.log(err);
+         tentativas++;
+
+        alert(
+            `Email ou senha inválidos.\nTentativa ${tentativas} de 3`
+        );
+
+        if (tentativas >= 3) {
+            alert("Usuário bloqueado após 3 tentativas.");
+
+           
+            document.getElementById("btnLogin").disabled = true;
+        }
 
         return false;
     }
